@@ -14,12 +14,13 @@
         android:theme="@style/Theme.FoodApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
-        <activity android:name="com.example.foodapp.fragment.MealActivity" />
+        <activity
+            android:name=".fragment.CategoryMealsActivity"
+            android:exported="false" />
+        <activity android:name=".fragment.MealActivity" />
         <activity
             android:name=".fragment.MainActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
