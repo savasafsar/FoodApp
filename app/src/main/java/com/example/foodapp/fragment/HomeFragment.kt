@@ -8,13 +8,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.foodapp.R
 import com.example.foodapp.adapter.CategoriesAdapter
 
 import com.example.foodapp.adapter.MostPopularAdapter
 import com.example.foodapp.databinding.FragmentHomeBinding
+import com.example.foodapp.fragment.bottomsheet.MealBottomSheetFragment
 import com.example.foodapp.model.MealsByCategory
 import com.example.foodapp.model.Meal
 import com.example.foodapp.viewModel.HomeViewModel
@@ -67,8 +70,24 @@ class HomeFragment : Fragment() {
         viewModel.getCategories()
         observeCategoriesLiveData()
         onCategoryClick()
+        onPopularItemLongClick()
+
+        onSearchIconClick()
 
 
+    }
+
+    private fun onSearchIconClick() {
+        binding.imgSearch.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
+        }
+    }
+
+    private fun onPopularItemLongClick() {
+        popularItemsAdapter.onLongItemClick = {meal->
+            val mealBottomSheetFragment = MealBottomSheetFragment.newInstance(meal.idMeal)
+            mealBottomSheetFragment.show(childFragmentManager,"Meal Info")
+        }
     }
 
     private fun onCategoryClick() {

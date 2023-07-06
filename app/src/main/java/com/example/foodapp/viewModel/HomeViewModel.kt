@@ -21,6 +21,8 @@ class HomeViewModel (
     private var popularItemsLiveData = MutableLiveData<List<MealsByCategory>>()
     private var categoriesLiveData = MutableLiveData<List<Category>>()
     private var favoritesMealsLiveData = mealDatabase.mealDao().getAllMeals()
+    private var bottomSheetMealLiveData = MutableLiveData<Meal>()
+    private val searchedMealsLiveData = MutableLiveData<List<Meal>>()
     fun getRandomMeal() {
         RetrofitInstance.api.getRandomMeal().enqueue(object : Callback<MealList> {
             override fun onResponse(call: Call<MealList>, response: Response<MealList>) {
@@ -68,6 +70,22 @@ fun getCategories() {
     })
 
 }
+fun getMealById(id:String) {
+    RetrofitInstance.api.getMealDetails(id).enqueue(object :Callback<MealList>{
+        override fun onResponse(call: Call<MealList>, response: Response<MealList>) {
+            val meal = response.body()?.meals?.first()
+            meal?.let { meal->
+                bottomSheetMealLiveData.postValue(meal)
+            }
+        }
+
+        override fun onFailure(call: Call<MealList>, t: Throwable) {
+            Log.e("HomeViewModel",t.message.toString())
+        }
+
+    })
+}
+
     fun deleteMeal(meal: Meal) {
         viewModelScope.launch {
             mealDatabase.mealDao().delete(meal)
@@ -78,7 +96,24 @@ fun getCategories() {
             mealDatabase.mealDao().upsert(meal)
         }
     }
+    fun searchMeals(searchQuery:String) = RetrofitInstance.api.searchMeals(searchQuery).enqueue(
+        object :Callback<MealList>{
+            override fun onResponse(call: Call<MealList>, response: Response<MealList>) {
+                val mealsList = response.body()?.meals
+                mealsList?.let {
+                    searchedMealsLiveData.postValue(it)
+                }
+            }
 
+            override fun onFailure(call: Call<MealList>, t: Throwable) {
+                Log.e("HomeViewModel",t.message.toString())
+            }
+
+        }
+    )
+
+
+    fun observeSearchMealsLiveData():LiveData<List<Meal>> = searchedMealsLiveData
     fun observeRandomMealLivedata() : LiveData<Meal> {
         return randomMealLiveData
     }
@@ -93,5 +128,6 @@ fun getCategories() {
     fun observeFavoritesMealsLiveData():LiveData<List<Meal>> {
         return favoritesMealsLiveData
     }
+    fun observeBottomSheetMeal()  : LiveData<Meal>  = bottomSheetMealLiveData
 
 }
