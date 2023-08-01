@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.foodapp.databinding.MealItemBinding
+import com.example.foodapp.downloadFromUrl
 import com.example.foodapp.model.Meal
+import com.example.foodapp.placeholderProgressBar
 
 class MealsAdapter: RecyclerView.Adapter<MealsAdapter.FavoriteMealsAdapterViewHolder>() {
 
@@ -39,8 +41,9 @@ class MealsAdapter: RecyclerView.Adapter<MealsAdapter.FavoriteMealsAdapterViewHo
     override fun onBindViewHolder(holder: FavoriteMealsAdapterViewHolder, position: Int) {
 
         val meal = differ.currentList[position]
-        Glide.with(holder.itemView).load(meal.strMealThumb).into(holder.binding.imgMeal)
+
         holder.binding.tvMealName.text = meal.strMeal
+        holder.binding.imgMeal.downloadFromUrl(meal.strMealThumb, placeholderProgressBar(holder.itemView.context))
     }
 
 

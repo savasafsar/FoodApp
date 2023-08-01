@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.foodapp.databinding.CategoryItemBinding
+import com.example.foodapp.downloadFromUrl
 import com.example.foodapp.model.Category
+import com.example.foodapp.placeholderProgressBar
 
 class CategoriesAdapter(): RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>() {
 
@@ -29,9 +31,9 @@ class CategoriesAdapter(): RecyclerView.Adapter<CategoriesAdapter.CategoryViewHo
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
 
-        Glide.with(holder.itemView)
-            .load(categoriesList[position].strCategoryThumb)
-            .into(holder.binding.imgCategory)
+       holder.binding.imgCategory.downloadFromUrl(categoriesList[position].strCategoryThumb,
+           placeholderProgressBar(holder.itemView.context)
+       )
         holder.binding.tvCategoryName.text = categoriesList[position].strCategory
 
         holder.itemView.setOnClickListener{

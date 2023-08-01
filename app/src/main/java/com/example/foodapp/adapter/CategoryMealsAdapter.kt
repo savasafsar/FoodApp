@@ -5,8 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.foodapp.databinding.MealItemBinding
+import com.example.foodapp.downloadFromUrl
 import com.example.foodapp.model.MealList
 import com.example.foodapp.model.MealsByCategory
+import com.example.foodapp.placeholderProgressBar
 
 class CategoryMealsAdapter : RecyclerView.Adapter<CategoryMealsAdapter.CategoryMealsViewModel>() {
    private var mealsList = ArrayList<MealsByCategory>()
@@ -26,8 +28,10 @@ class CategoryMealsAdapter : RecyclerView.Adapter<CategoryMealsAdapter.CategoryM
     }
 
     override fun onBindViewHolder(holder: CategoryMealsViewModel, position: Int) {
-        Glide.with(holder.itemView).load(mealsList[position].strMealThumb)
-            .into(holder.binding.imgMeal)
+
         holder.binding.tvMealName.text = mealsList[position].strMeal
+        holder.binding.imgMeal.downloadFromUrl(mealsList[position].strMealThumb,
+            placeholderProgressBar(holder.itemView.context)
+        )
     }
 }

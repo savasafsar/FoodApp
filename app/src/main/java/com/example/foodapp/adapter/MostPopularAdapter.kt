@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.foodapp.databinding.PopularItemsBinding
+import com.example.foodapp.downloadFromUrl
 import com.example.foodapp.model.MealsByCategory
+import com.example.foodapp.placeholderProgressBar
 
 class MostPopularAdapter() : RecyclerView.Adapter<MostPopularAdapter.PopularMealViewHolder>() {
     lateinit var onItemClick : ((MealsByCategory)-> Unit)
@@ -28,9 +30,10 @@ class MostPopularAdapter() : RecyclerView.Adapter<MostPopularAdapter.PopularMeal
     }
 
     override fun onBindViewHolder(holder: PopularMealViewHolder, position: Int) {
-        Glide.with(holder.itemView)
-            .load(mealsList[position].strMealThumb)
-            .into(holder.binding.imgPopularMealItem)
+
+        holder.binding.imgPopularMealItem.downloadFromUrl(mealsList[position].strMealThumb,
+            placeholderProgressBar(holder.itemView.context)
+        )
 
         holder.itemView.setOnClickListener {
             onItemClick.invoke(mealsList[position])
